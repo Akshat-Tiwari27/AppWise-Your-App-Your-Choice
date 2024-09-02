@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AppWise: LeaderBoard</title>
+<link rel="icon" type="image/x-icon" href="/images/log-removebg-preview.png">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  .card {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card h3 {
+    margin: 0;
+  }
+  .card .vote-btn {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .card .vote-btn:hover {
+    background-color: #45a049;
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Leaderboard</h1>
+    <div id="leaderboard">
+    </div>
+  </div>
+
+  <script>
+    const leaderboardData = [
+      { name: "Candidate A", votes: 10 },
+      { name: "Candidate B", votes: 8 },
+      { name: "Candidate C", votes: 5 },
+      { name: "Candidate D", votes: 3 },
+    ];
+
+    const leaderboardContainer = document.getElementById("leaderboard");
+    function renderLeaderboard() {
+      leaderboardContainer.innerHTML = ''; 
+      leaderboardData.forEach((candidate, index) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        const nameElement = document.createElement("h3");
+        nameElement.textContent = `${index + 1}. ${candidate.name}`;
+        const voteButton = document.createElement("button");
+        voteButton.textContent = "Vote";
+        voteButton.classList.add("vote-btn");
+        voteButton.addEventListener("click", () => {
+          leaderboardData[index].votes++;
+          renderLeaderboard();
+        });
+        const votesElement = document.createElement("span");
+        votesElement.textContent = `${candidate.votes} votes`;
+        card.appendChild(nameElement);
+        card.appendChild(voteButton);
+        card.appendChild(votesElement);
+        leaderboardContainer.appendChild(card);
+      });
+    }
+    renderLeaderboard();
+  </script>
+</body>
+</html>

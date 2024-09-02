@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppWise: Compare Apps</title>
+  <link rel="icon" type="image/x-icon" href="/images/log-removebg-preview.png">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d1edf5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: whitesmoke;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .head{
+        text-align: center;
+    }
+    .header{
+  position: absolute;
+  top: 5%;
+  left: 20%;
+}
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+    select, button {
+      font-size: 16px;
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .comparison-image {
+      max-width: 100px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="head">
+    <h2>Compare your APP</h2>
+    <h5>choose the best app by comparing them with there varities</h5>
+    </div>
+    <div class="header">
+      <img src="/images/AppWise-removebg-preview.png" height="120px" width="120px">
+  </div>
+  <br><br>
+    <label for="appType">Select App Type:</label>
+    <select id="appType">
+      <option value="">-- Select App Type --</option>
+    </select>
+    <br>
+    <label for="app1">Select App 1:</label>
+    <select id="app1" disabled>
+      <option value="">-- Select App --</option>
+    </select>
+    <br>
+    <label for="app2">Select App 2:</label>
+    <select id="app2" disabled>
+      <option value="">-- Select App --</option>
+    </select>
+    <br>
+    <button id="compareBtn" disabled>Compare Apps</button>
+    <br>
+    <div id="comparisonContainer" style="display: none;">
+      <table id="comparisonTable">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>App 1</th>
+            <th>App 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td id="appName1"></td>
+            <td id="appName2"></td>
+          </tr>
+          <tr>
+            <td>Rating</td>
+            <td id="appRating1"></td>
+            <td id="appRating2"></td>
+          </tr>
+          <tr>
+            <td>Size</td>
+            <td id="appSize1"></td>
+            <td id="appSize2"></td>
+          </tr>
+          <tr>
+            <td>Rated for</td>
+            <td id="appRate1"></td>
+            <td id="appRate2"></td>
+          </tr>
+          <tr>
+            <td>Users</td>
+            <td id="appUser1"></td>
+            <td id="appUser2"></td>
+          </tr>
+          <tr>
+            <td>About</td>
+            <td id="appAbout1"></td>
+            <td id="appAbout2"></td>
+          </tr>
+          <tr>
+            <td>Authorization</td>
+            <td id="appAuthor1"></td>
+            <td id="appAuthor2"></td>
+          </tr>
+          <tr>
+            <td>App Link</td>
+            <td id="appInstall1"></td>
+            <td id="appInstall2"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+    { name: 'Zomato', rating: 4.5, size: '35 MB', type: 'Food App', rate: 'age 3+', user: '100M+', about: 'Food delivery and restaurant discovery', author: 'Zomato Media Private Limited', install: 'https://play.google.com/store/apps/details?id=com.application.zomato' },
+      { name: 'BlinkIT', rating: 4.3, size: '21 MB', type: 'Food App', rate: 'age 3+', user: '50M+', about: 'Grocery delivery in minutes', author: 'Blink Commerce Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.blinkit.app' },
+      { name: 'Wynk Music', rating: 4.5, size: '25 MB', type: 'Music App', rate: 'age 12+', user: '100M+', about: 'Music streaming and download', author: 'Airtel Digital Limited', install: 'https://play.google.com/store/apps/details?id=com.bharti.airtel.wynk' },
+      { name: 'Swiggy', rating: 4.5, size: '141 MB', type: 'Food App', rate: 'age 3+', user: '100M+', about: 'Food delivery and restaurant discovery', author: 'Bundl Technologies Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=in.swiggy.android' },
+      { name: 'Zepto', rating: 4.5, size: '24 MB', type: 'Food App', rate: 'age 3+', user: '10M+', about: 'Grocery delivery in 10 minutes', author: 'Zepto Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.zepto.app' },
+      { name: 'Domino', rating: 4.6, size: '13 MB', type: 'Food App', rate: 'age 3+', user: '10M+', about: 'Pizza delivery and online ordering', author: 'Jubilant FoodWorks Limited', install: 'https://play.google.com/store/apps/details?id=com.dominos.pizza.india' },
+      { name: 'Country Delight', rating: 4.4, size: '21 MB', type: 'Food App', rate: 'age 12+', user: '10M+', about: 'Dairy and grocery delivery', author: 'Country Delight Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.countrydelight.app' },
+      { name: 'KFC India', rating: 4, size: '51 MB', type: 'Food App', rate: 'age 3+', user: '10M+', about: 'Finger lickin good food delivery', author: 'KFC India Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.kfcindia.app' },
+      { name: 'EatSure', rating: 4.3, size: '35 MB', type: 'Food App', rate: 'age 3+', user: '10M+', about: 'Food delivery and online ordering', author: 'EatSure Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.eatsure.app' },
+      { name: 'Pocket FM', rating: 4.3, size: '34 MB', type: 'Music App', rate: 'age 12+', user: '100M+', about: 'Audio stories and podcasts', author: 'Pocket FM Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.pocketfm.app' },
+      { name: 'Spotify', rating: 2.6, size: '37 MB', type: 'Music App', rate: 'age 12+', user: '1B+', about: 'Music streaming and download', author: 'Spotify Ltd', install: 'https://play.google.com/store/apps/details?id=com.spotify.music' },
+      { name: 'Star Maker', rating: 4.4, size: '139 MB', type: 'Music App', rate: 'age 12+', user: '100M+', about: 'Sing with your favorite artists', author: 'Star Maker Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.starmaker.app' },
+{ name: 'Smule', rating: 3.9, size: '58 MB', type: 'Music App', rate: 'age 12+', user: '100M+', about: 'Sing and make music with friends', author: 'Smule Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.smule.app' },
+{ name: 'JioSaavn', rating: 4.3, size: '34 MB', type: 'Music App', rate: 'age 12+', user: '100M+', about: 'Music streaming and download', author: 'JioSaavn Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.jiosaavn.app' },
+{ name: 'Ultimate Guitar', rating: 4.4, size: '98 MB', type: 'Music App', rate: 'age 3+', user: '10M+', about: 'Guitar tabs and chords', author: 'Ultimate Guitar Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.ultimate.guitar.app' },
+{ name: 'SingSpot', rating: 3, size: '130 MB', type: 'Music App', rate: 'age 12+', user: '1M+', about: 'Sing and record your favorite songs', author: 'SingSpot Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.singspot.app' },
+{ name: 'Noises', rating: 4.6, size: '57 MB', type: 'Music App', rate: 'age 3+', user: '10M+', about: 'Relaxing sounds and music', author: 'Noises Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.noises.app' },
+{ name: 'Jio Cinema', rating: 4.1, size: '24 MB', type: 'Entertainment App', rate: 'age 12+', user: '100M+', about: 'Watch movies and TV shows', author: 'Jio Cinema Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.jiocinema.app' },
+{ name: 'Eloelo', rating: 4.1, size: '24 MB', type: 'Entertainment App', rate: 'age 12+', user: '50M+', about: 'Short videos and entertainment', author: 'Eloelo Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.eloelo.app' },
+{ name: 'Amazon miniTV', rating: 4.4, size: '5 MB', type: 'Entertainment App', rate: 'age 12+', user: '10M+', about: 'Watch free movies and TV shows', author: 'Amazon Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.amazon.minitv.app' },
+{ name: 'Disney+ Hotstar', rating: 4, size: '19 MB', type: 'Entertainment App', rate: 'age 12+', user: '500M+', about: 'Watch movies, TV shows, and sports', author: 'Disney+ Hotstar Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.disney.hotstar.app' },
+{ name: 'ZEE5 Movies', rating: 4.5, size: '26 MB', type: 'Entertainment App', rate: 'age 12+', user: '100M+', about: 'Watch movies, TV shows, and originals', author: 'ZEE5 Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.zee5.movies.app' },
+{ name: 'Youtube Kids', rating: 3.9, size: '40 MB', type: 'Entertainment App', rate: 'age 3+', user: '500M+', about: '', author: '', install: '' },
+{ name: 'NETFLIX', rating: 4, size: '30 MB', type: 'Entertainment App', rate: 'age 12+', user: '1B+', about: 'Watch movies, TV shows, and originals', author: 'Netflix Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.netflix.app' },
+{ name: 'JioTV', rating: 3.9, size: '22 MB', type: 'Entertainment App', rate: 'age 3+', user: '100M+', about: 'Live TV and sports', author: 'JioTV Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.jiotv.app' },
+{ name: 'Amazon Prime video', rating: 3.9, size: '22 MB', type: 'Entertainment App', rate: 'age 3+', user: '500M+', about: 'Watch movies, TV shows, and originals', author: 'Amazon Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.amazon.prime.video.app' },
+{ name: 'SonyTV', rating: 4.1, size: '19 MB', type: 'Entertainment App', rate: 'age 3+', user: '100M+', about: 'Live TV and sports', author: 'SonyTV Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.sonytv.app' },
+{ name: 'NoiseFIT', rating: 4.4, size: '97 MB', type: 'Fitness App', rate: 'age 3+', user: '10M+', about: 'Fitness tracking and workout', author: 'NoiseFIT Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.noisefit.app' },
+{ name: 'Sweatcoin step count', rating: 4.3, size: '80 MB', type: 'Fitness App', rate: 'age 3+', user: '100M+', about: 'Earn rewards for walking', author: 'Sweatcoin Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.sweatcoin.app' },
+{ name: 'NIVA bupa Health', rating: 4.5, size: '21 MB', type: 'Fitness App', rate: 'age 3+', user: '100M+', about: 'Health insurance and wellness', author: 'NIVA bupa Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.nivabupa.app' },
+{ name: 'Ovulation tracker', rating: 4.8, size: '57 MB', type: 'Fitness App', rate: 'age 3+', user: '100M+', about: 'Track your menstrual cycle', author: 'Ovulation Tracker Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.ovulation.tracker.app' },
+{ name: 'boAt Crest', rating: 4.5, size: '74 MB', type: 'Fitness App', rate: 'age 3+', user: '1M+', about: 'Fitness tracking and workout', author: 'boAt Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.boat.crest.app' },
+{ name: 'Home Workout', rating: 4.8, size: '16 MB', type: 'Fitness App', rate: 'age 3+', user: '10M+', about: 'Workout at home with videos', author: 'Home Workout Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.home.workout.app' },
+{ name: 'Pedometer', rating: 4.8, size: '18 MB', type: 'Fitness App', rate: 'age 3+', user: '1B+', about: 'Track your daily steps', author: 'Pedometer Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.pedometer.app' },{ name: 'Health Tracker', rating: 3.8, size: '30 MB', type: 'Fitness App', image: 'https://example.com/noises.jpg', rate: 'age 3+', user: '100M+', about: '', author: '', install: '' },
+{ name: 'Fastrack Samrt World', rating: 4.4, size: '94 MB', type: 'Fitness App', rate: 'age 3+', user: '1M+', about: 'Fitness tracking and workout', author: 'Fastrack Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.fastrack.smart.world.app' },
+{ name: 'GlowRoad', rating: 4.2, size: '12 MB', type: 'Business App', rate: 'age 3+', user: '50M+', about: 'E-commerce and shopping', author: 'GlowRoad Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.glowroad.app' },
+{ name: 'ZOOM workplace', rating: 4.1, size: '117 MB', type: 'Business App', rate: 'age 12+', user: '1B+', about: 'Video conferencing and meetings', author: 'ZOOM Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.zoom.workplace.app' },
+{ name: 'Linkedin', rating: 4.1, size: '36 MB', type: 'Business App', rate: 'age 12+', user: '1B+', about: 'Professional networking and job search', author: 'Linkedin Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.linkedin.app' },
+{ name: 'Indeed Jobs', rating: 4.4, size: '23 MB', type: 'Business App', rate: 'age 3+', user: '100M+', about: 'Job search and career development', author: 'Indeed Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.indeed.jobs.app' },
+{ name: 'Naukri', rating: 4.6, size: '16 MB', type: 'Business App', rate: 'age 3+', user: '100M+', about: 'Job search and career development', author: 'Naukri Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.naukri.app' },
+{ name: 'Delhivery', rating: 3.7, size: '24 MB', type: 'Business App', rate: 'age 3+', user: '5M+', about: 'Logistics and delivery services', author: 'Delhivery Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.delhivery.app' },
+{ name: 'Microsoft Teams', rating: 4.5, size: '61 MB', type: 'Business App', rate: 'age 3+', user: '100M+', about: 'Team collaboration and communication', author: 'Microsoft Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.microsoft.teams.app' },
+{ name: 'Porter', rating: 4.8, size: '36 MB', type: 'Business App', rate: 'age 3+', user: '10M+', about: 'Logistics and delivery services', author: 'Porter Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.porter.app' },
+{ name: 'Document Scan', rating: 3.8, size: '53 MB', type: 'Business App', rate: 'age 3+', user: '10M+', about: 'Document scanning and management', author: 'Document Scan Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.document.scan.app' },
+{ name: 'Mobile Recharge', rating: 4.6, size: '22 MB', type: 'Business App', rate: 'age 3+', user: '1M+', about: 'Mobile recharge and bill payment', author: 'Mobile Recharge Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.mobile.recharge.app' },     
+{ name: 'Free Fire', rating: 4.3, size: '590 MB', type: 'Game App', rate: 'age 12+', user: '100M+', about: 'Battle royale game', author: 'Garena Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.free.fire.app' },
+{ name: 'battlegrounds Mobile India', rating: 4.4, size: '0.95 GB', type: 'Game App', rate: 'age 16+', user: '100M+', about: 'Battle royale game', author: 'Krafton Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.battlegrounds.mobile.india.app' },
+{ name: 'Coin Master', rating: 4.3, size: '78 MB', type: 'Game App', rate: 'age 18+', user: '100M+', about: 'Casual game', author: 'Moon Active Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.coin.master.app' },
+{ name: 'Candy Crush Saga', rating: 4.4, size: '247 MB', type: 'Game App', rate: 'age 7+', user: '500M+', about: 'Puzzle game', author: 'King Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.candy.crush.saga.app' },
+{ name: 'eFootball 2024', rating: 4.4, size: '2.5 GB', type: 'Game App', rate: 'age 5+', user: '100M+', about: 'Sports game', author: 'Konami Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.eFootball.2024.app' },
+{ name: 'Clash of Clans', rating: 3.5, size: '247 MB', type: 'Game App', rate: 'age 2+', user: '500M+', about: 'Strategy game', author: 'Supercell Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.clash.of.clans.app' },
+{ name: 'Call of Duty', rating: 4.2, size: '2.5 GB', type: 'Game App', rate: 'age 7+', user: '100M+', about: 'First-person shooter game', author: 'Activision Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.call.of.duty.app' },
+{ name: 'EA Sports FC', rating: 4.1, size: '115 MB', type: 'Game App', rate: 'age 12+', user: '500M+', about: 'Sports game', author: 'EA Sports Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.ea.sports.fc.app' },
+{ name: 'Whiteout Survival', rating: 4.4, size: '481 MB', type: 'Game App', rate: 'age 16+', user: '10M+', about: 'Survival game', author: 'Whiteout Survival Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.whiteout.survival.app' },
+{ name: 'Seekho: Learn app', rating: 4.6, size: '26 MB', type: 'Education App', rate: 'age 3+', user: '10M+', about: 'Hindi based Learning App', author: 'Seekho apps', install: '' },
+{ name: 'Duolingo', rating: 4.5, size: '37 MB', type: 'Education App', rate: 'age 3+', user: '500M+', about: 'Language learning platform', author: 'Duolingo Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.duolingo.app' },
+{ name: 'Unacademy', rating: 3.9, size: '69 MB', type: 'Education App', rate: 'age 3+', user: '50M+', about: 'Online learning platform', author: 'Unacademy Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.unacademy.app' },
+{ name: 'PW: JEE/NEET, UPSC, GATE', rating: 4.6, size: '45 MB', type: 'Education App', rate: 'age 3+', user: '10M+', about: 'Competitive exam preparation', author: 'PW Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.pw.jee.neet.upsc.gate.app' },
+{ name: 'Plantix-your crop doctor', rating: 4.2, size: '22 MB', type: 'Education App', rate: 'age 3+', user: '10M+', about: 'Agricultural education and guidance', author: 'Plantix Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.plantix.your.crop.doctor.app' },
+{ name: 'e-Shikshakosh', rating: 3.5, size: '20 MB', type: 'Education App', rate: 'age 3+', user: '500K+', about: 'Online education platform', author: 'e-Shikshakosh Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.e.shikshakosh.app' },
+{ name: 'Brainly', rating: 4.4, size: '36 MB', type: 'Education App', rate: 'age 3+', user: '100M+', about: 'Online learning community', author: 'Brainly Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.brainly.app' },
+{ name: 'Lingutown', rating: 4.3, size: '38 MB', type: 'Education App', rate: 'age 3+', user: '10M+', about: 'Language learning platform', author: 'Lingutown Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.lingutown.app' },
+{ name: 'Textbook: Exam preparation app', rating: 4.4, size: '47 MB', type: 'Education App', rate: 'age 3+', user: '10M+', about: 'Exam preparation and study materials', author: 'Textbook Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.textbook.exam.preparation.app' },
+{ name: 'Bible app for kids', rating: 3.9, size: '52 MB', type: 'Education App', rate: 'age 3+', user: '50M+', about: 'Bible stories and educational content for kids', author: 'Bible App for Kids Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.bible.app.for.kids' },   
+{ name: 'Housing: Buy Rent Sell', rating: 4.5, size: '64 MB', type: 'House & Homes App', rate: 'age 18+', user: '100M+', about: 'Real estate platform for buying, renting, and selling properties', author: 'Housing Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.housing.buy.rent.sell.app' },
+{ name: '99 Acres', rating: 4.3, size: '67 MB', type: 'House & Homes App', rate: 'age 18+', user: '10M+', about: 'Real estate platform for buying, renting, and selling properties', author: '99 Acres Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.99.acres.app' },
+{ name: 'NoBroker Rent, Buy, Sell flats', rating: 4.3, size: '21 MB', type: 'House & Homes App', rate: 'age 18+', user: '10M+', about: 'Real estate platform for renting, buying, and selling flats', author: 'NoBroker Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.nobroker.rent.buy.sell.flats.app' },
+{ name: 'Utec', rating: 3.6, size: '46 MB', type: 'House & Homes App', rate: 'age 18+', user: '1M+', about: 'Home automation and control system', author: 'Utec Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.utec.app' },
+{ name: 'Bihar Sugam Smart Meter', rating: 3.7, size: '01 MB', type: 'House & Homes App', rate: 'age 18+', user: '1M+', about: 'Smart meter management system for electricity consumers', author: 'Bihar Sugam Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.bihar.sugam.smart.meter.app' },
+{ name: 'MagicBricks.com', rating: 4.2, size: '45 MB', type: 'House & Homes App', rate: 'age 18+', user: '10M+', about: 'Real estate platform for buying, renting, and selling properties', author: 'MagicBricks Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.magicbricks.com.app' },
+{ name: 'AC Remote', rating: 4.2, size: '18 MB', type: 'House & Homes App', rate: 'age 18+', user: '10M+', about: 'Remote control for air conditioners', author: 'AC Remote Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.ac.remote.app' },
+{ name: 'KOLO: Home Interiors', rating: 4.1, size: '28 MB', type: 'House & Homes App', rate: 'age 18+', user: '10M+', about: 'Home interior design and decoration platform', author: 'KOLO Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.kolo.home.interiors.app' },
+{ name: 'Urban Company', rating: 4.8, size: '55 MB', type: 'House & Homes App', rate: 'age 12+', user: '5M+', about: 'Home services and maintenance platform', author: 'Urban Company Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.urban.company.app' },
+{ name: 'Remote.com', rating: 4.3, size: '31 MB', type: 'House & Homes App', rate: 'age 18+', user: '5M+', about: 'Remote work and virtual assistance platform', author: 'Remote.com Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.remote.com.app' },
+{ name: 'PhonePe', rating: 4.4, size: '40 MB', type: 'Finance App', rate: 'age 18+', user: '500M+', about: 'Digital payment and wallet platform', author: 'PhonePe Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.phonepe.app' },
+{ name: 'Airtel Thanks', rating: 4.3, size: '14 MB', type: 'Finance App', rate: 'age 18+', user: '100M+', about: 'Digital payment and wallet platform', author: 'Airtel Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.airtel.thanks.app' },
+{ name: 'Google Pay', rating: 4.4, size: '36 MB', type: 'Finance App', rate: 'age 18+', user: '1B+', about: 'Digital payment and wallet platform', author: 'Google LLC', install: 'https://play.google.com/store/apps/details?id=com.google.pay.app' },
+{ name: 'Paytm', rating: 4.5, size: '61 MB', type: 'Finance App', rate: 'age 18+', user: '500M+', about: 'Digital payment and wallet platform', author: 'Paytm Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.paytm.app' },
+{ name: 'Groww Stocks', rating: 4.4, size: '32 MB', type: 'Finance App', rate: 'age 18+', user: '50M+', about: 'Stock trading and investment platform', author: 'Groww Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.groww.stocks.app' },
+{ name: 'Bajaj Finserv', rating: 4.8, size: '33 MB', type: 'Finance App', rate: 'age 18+', user: '100M+', about: 'Financial services and lending platform', author: 'Bajaj Finserv Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.bajaj.finserv.app' },
+{ name: 'YONO SBI', rating: 4.8, size: '72 MB', type: 'Finance App', rate: 'age 18+', user: '100M+', about: 'Digital banking and financial services platform', author: 'State Bank of India', install: 'https://play.google.com/store/apps/details?id=com.yono.sbi.app' },
+{ name: 'Angel One', rating: 4.7, size: '51 MB', type: 'Finance App', rate: 'age 18+', user: '50M+', about: 'Stock trading and investment platform', author: 'Angel One Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.angel.one.app' },
+{ name: 'Tonkeeper: Ton Wallet', rating: 4.7, size: '29 MB', type: 'Finance App', rate: 'age 18+', user: '10M+', about: 'Digital wallet and payment platform', author: 'Tonkeeper Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.tonkeeper.ton.wallet.app' },
+{ name: 'Upstox', rating: 4.5, size: '48 MB', type: 'Finance App', rate: 'age 18+', user: '10M+', about: 'Stock trading and investment platform', author: 'Upstox Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.upstox.app' },
+{ name: 'WhatsApp Messenger', rating: 4.1, size: '48 MB', type: 'Communication App', rate: 'age 3+', user: '5B+', about: 'Instant messaging and communication platform', author: 'WhatsApp Inc.', install: 'https://play.google.com/store/apps/details?id=com.whatsapp.messenger.app' },
+{ name: 'Telegram', rating: 4.2, size: '100 MB', type: 'Communication App', rate: 'age 12+', user: '1B+', about: 'Instant messaging and communication platform', author: 'Telegram Messenger Inc.', install: 'https://play.google.com/store/apps/details?id=com.telegram.app' },
+{ name: 'TrueCaller', rating: 4.4, size: '32 MB', type: 'Communication App', rate: 'age 12+', user: '1B+', about: 'Caller ID and spam blocking platform', author: 'TrueCaller Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.truecaller.app' },
+{ name: 'Snapchat', rating: 4.3, size: '68 MB', type: 'Communication App', rate: 'age 12+', user: '1B+', about: 'Social media and messaging platform', author: 'Snap Inc.', install: 'https://play.google.com/store/apps/details?id=com.snapchat.app' },
+{ name: 'WhatsApp Business', rating: 4.2, size: '52 MB', type: 'Communication App', rate: 'age 3+', user: '1B+', about: 'Business communication and messaging platform', author: 'WhatsApp Inc.', install: 'https://play.google.com/store/apps/details?id=com.whatsapp.business.app' },
+{ name: 'Messenger', rating: 4.2, size: '51 MB', type: 'Communication App', rate: 'age 12+', user: '5B+', about: 'Instant messaging and communication platform', author: 'Facebook Inc.', install: 'https://play.google.com/store/apps/details?id=com.messenger.app' },
+{ name: 'CallApp: callerID and Block', rating: 3.9, size: '33 MB', type: 'Communication App', rate: 'age 3+', user: '100M+', about: 'Caller ID and spam blocking platform', author: 'CallApp Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.callapp.app' },
+{ name: 'how CallerId & Spam block', rating: 4.0, size: '26 MB', type: 'Communication App', rate: 'age 3+', user: '10M+', about: 'Caller ID and spam blocking platform', author: 'Show CallerId Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.show.callerid.spam.block.app' },
+{ name: 'IMO: International Call & Chat', rating: 4.1, size: '48 MB', type: 'Communication App', rate: 'age 3+', user: '1B+', about: 'International calling and messaging platform', author: 'IMO Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.imo.app' },
+{ name: 'GetContact', rating: 3.6, size: '89 MB', type: 'Communication App', rate: 'age 3+', user: '100M+', about: 'Contact management and caller ID platform', author: 'GetContact Pvt Ltd', install: 'https://play.google.com/store/apps/details?id=com.getcontact.app' },
+
+ ];
+
+    const appTypeSelect = document.getElementById('appType');
+    const app1Select = document.getElementById('app1');
+    const app2Select = document.getElementById('app2');
+    const compareBtn = document.getElementById('compareBtn');
+    const comparisonContainer = document.getElementById('comparisonContainer');
+    const appName1 = document.getElementById('appName1');
+    const appName2 = document.getElementById('appName2');
+    const appRating1 = document.getElementById('appRating1');
+    const appRating2 = document.getElementById('appRating2');
+    const appSize1 = document.getElementById('appSize1');
+    const appSize2 = document.getElementById('appSize2');
+    const appRate1 = document.getElementById('appRate1');
+    const appRate2 = document.getElementById('appRate2');
+    const appUser1 = document.getElementById('appUser1');
+    const appUser2 = document.getElementById('appUser2'); 
+    const appAbout1 = document.getElementById('appAbout1');
+    const appAbout2 = document.getElementById('appAbout2');
+    const appAuthor1 = document.getElementById('appAuthor1');
+    const appAuthor2 = document.getElementById('appAuthor2');
+    const appInstall1 = document.getElementById('appInstall1');
+    const appInstall2 = document.getElementById('appInstall2');  
+
+    function getUniqueAppTypes(products) {
+      const appTypes = products.map(product => product.type);
+      return [...new Set(appTypes)];
+    }
+    function populateAppTypes(products) {
+      const uniqueAppTypes = getUniqueAppTypes(products);
+      uniqueAppTypes.forEach(appType => {
+        const option = document.createElement('option');
+        option.textContent = appType;
+        option.value = appType;
+        appTypeSelect.appendChild(option);
+      });
+    }
+    function populateAppsByType(selectedType) {
+      const filteredApps = products.filter(product => product.type === selectedType);
+      app1Select.innerHTML = '<option value="">-- Select App --</option>';
+      app2Select.innerHTML = '<option value="">-- Select App --</option>';
+      filteredApps.forEach(product => {
+        const option1 = document.createElement('option');
+        option1.textContent = product.name;
+        option1.value = product.name;
+        app1Select.appendChild(option1);
+        const option2 = document.createElement('option');
+        option2.textContent = product.name;
+        option2.value = product.name;
+        app2Select.appendChild(option2);
+      });
+      app1Select.disabled = false;
+      app2Select.disabled = false;
+      compareBtn.disabled = false;
+    }
+    appTypeSelect.addEventListener('change', () => {
+      const selectedType = appTypeSelect.value;
+      populateAppsByType(selectedType);
+    });
+    compareBtn.addEventListener('click', () => {
+      const app1Name = app1Select.value;
+      const app2Name = app2Select.value;
+      const app1 = products.find(product => product.name === app1Name);
+      const app2 = products.find(product => product.name === app2Name);
+      appName1.textContent = app1.name;
+      appName2.textContent = app2.name;
+      appRating1.textContent = app1.rating;
+      appRating2.textContent = app2.rating;
+      appSize1.textContent = app1.size;
+      appSize2.textContent = app2.size;
+      appRate1.textContent = app1.rate;
+      appRate2.textContent = app2.rate;
+      appUser1.textContent = app1.user;
+      appUser2.textContent = app2.user;
+      appAbout1.textContent = app1.about;
+      appAbout2.textContent = app2.about;
+      appAuthor1.textContent = app1.author;
+      appAuthor2.textContent = app2.author;
+      appInstall1.innerHTML = `<a href="${app1.install}" target="_blank">Install ${app1.name}</a>`;
+    appInstall2.innerHTML = `<a href="${app2.install}" target="_blank">Install ${app2.name}</a>`;
+      comparisonContainer.style.display = 'block';
+    });
+    populateAppTypes(products);
+  </script>
+
+</body>
+</html>
